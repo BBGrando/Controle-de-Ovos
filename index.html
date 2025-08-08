@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle de Peso - Ovos Ring Neck</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Controle de Peso - Ovos Ring Neck</h1>
+            <p class="header-subtitle">Sistema de monitoramento durante período de incubação (23-24 dias)</p>
+        </header>
+
+        <div class="main-grid">
+            <section class="table-section">
+                <div class="section-header">
+                    <h2>Tabela de Controle</h2>
+                    <button class="btn btn--primary" id="addEggBtn">+ Adicionar Ovo</button>
+                </div>
+                
+                <div class="table-wrapper">
+                    <table class="egg-table" id="eggTable">
+                        <thead>
+                            <tr>
+                                <th>Ovo</th>
+                                <th>Data Postura</th>
+                                <th>Peso Inicial (g)</th>
+                                <th>Entrada Chocadeira</th>
+                                <th>Peso 5 Dias (g)</th>
+                                <th>Perda 5 Dias (%)</th>
+                                <th>Status 5 Dias</th>
+                                <th>Peso 10 Dias (g)</th>
+                                <th>Perda 10 Dias (%)</th>
+                                <th>Status 10 Dias</th>
+                                <th>Peso 15 Dias (g)</th>
+                                <th>Perda 15 Dias (%)</th>
+                                <th>Status 15 Dias</th>
+                                <th>Peso 20 Dias (g)</th>
+                                <th>Perda 20 Dias (%)</th>
+                                <th>Status 20 Dias</th>
+                                <th>Data Eclosão</th>
+                                <th>Observações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="eggTableBody">
+                            <!-- Dados serão inseridos via JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="chart-section">
+                <div class="section-header">
+                    <h2>Curva de Peso</h2>
+                    <button class="btn btn--secondary" id="downloadBtn">Download CSV</button>
+                </div>
+                
+                <div class="chart-container" style="position: relative; height: 400px;">
+                    <canvas id="weightChart"></canvas>
+                </div>
+            </section>
+
+            <section class="info-section">
+                <div class="card">
+                    <div class="card__body">
+                        <h3>Parâmetros Ideais de Incubação</h3>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <strong>Temperatura:</strong> 37.5°C (99.5°F)
+                            </div>
+                            <div class="info-item">
+                                <strong>Umidade (1-20 dias):</strong> 50-55%
+                            </div>
+                            <div class="info-item">
+                                <strong>Umidade (21-24 dias):</strong> 65-70%
+                            </div>
+                            <div class="info-item">
+                                <strong>Período Total:</strong> 23-24 dias
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card__body">
+                        <h3>Interpretação dos Status</h3>
+                        <div class="status-legend">
+                            <div class="status-item">
+                                <span class="status status--success">IDEAL</span>
+                                <span>Perda de peso dentro da faixa esperada</span>
+                            </div>
+                            <div class="status-item">
+                                <span class="status status--info">BAIXO</span>
+                                <span>Diminuir umidade - perda insuficiente</span>
+                            </div>
+                            <div class="status-item">
+                                <span class="status status--error">ALTO</span>
+                                <span>Aumentar umidade - perda excessiva</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card__body">
+                        <h3>Faixas Ideais de Perda</h3>
+                        <div class="ideal-ranges">
+                            <div class="range-item">
+                                <strong>5 dias:</strong> 1.5% - 3.5%
+                            </div>
+                            <div class="range-item">
+                                <strong>10 dias:</strong> 4.0% - 6.0%
+                            </div>
+                            <div class="range-item">
+                                <strong>15 dias:</strong> 6.5% - 8.5%
+                            </div>
+                            <div class="range-item">
+                                <strong>20 dias:</strong> 9.0% - 11.0%
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Modal para adicionar novo ovo -->
+    <div class="modal hidden" id="addEggModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Adicionar Novo Ovo</h3>
+                <button class="modal-close" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="addEggForm">
+                    <div class="form-group">
+                        <label class="form-label" for="eggId">Identificação do Ovo:</label>
+                        <input type="text" class="form-control" id="eggId" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="layDate">Data de Postura:</label>
+                        <input type="date" class="form-control" id="layDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="initialWeight">Peso Inicial (g):</label>
+                        <input type="number" class="form-control" id="initialWeight" step="0.1" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="incubatorDate">Data Entrada na Chocadeira:</label>
+                        <input type="date" class="form-control" id="incubatorDate" required>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="submit" class="btn btn--primary">Adicionar</button>
+                        <button type="button" class="btn btn--outline" id="cancelBtn">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
+
