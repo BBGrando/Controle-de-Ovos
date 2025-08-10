@@ -105,6 +105,7 @@ function setupEventListeners() {
     
     const addBtn = document.getElementById("addEggBtn");
     const downloadBtn = document.getElementById("downloadBtn");
+    const saveBtn = document.getElementById("saveBtn");
     const closeModal = document.getElementById("closeModal");
     const cancelBtn = document.getElementById("cancelBtn");
     const addForm = document.getElementById("addEggForm");
@@ -118,6 +119,14 @@ function setupEventListeners() {
     if (downloadBtn) {
         downloadBtn.addEventListener("click", downloadCSV);
         console.log("Download button listener added");
+    }
+    
+    if (saveBtn) {
+        saveBtn.addEventListener("click", function() {
+            saveEggs();
+            alert("Dados salvos com sucesso!");
+        });
+        console.log("Save button listener added");
     }
     
     if (closeModal) {
